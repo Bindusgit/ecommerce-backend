@@ -20,9 +20,9 @@ Here's what to do:
 ## Still Have Issues? Download My Code
 If you still cannot fix the issue, you can download a copy of my code and start from there.
 
-1. Open this link: https://github.com/SuperSimpleDev/ecommerce-backend-ai/commits/main/. This will give you a list of Git Commits I made in the video.
+1. Open this link: https://github.com/ecommercedev/ecommerce-backend-ai/commits/main/. This will give you a list of Git Commits for the example project.
 
-2. In the video, go backwards and find the most recent Commit I made (before you ran into your issue).
+2.  (before you ran into your issue).
 <img height="180" alt="Image" src="https://github.com/user-attachments/assets/b63bab30-e888-4590-8c6a-12f7e872a41c" />
 
 3. Find the Commit in the list of Git Commits and click "Browse repository at this point"<br>
