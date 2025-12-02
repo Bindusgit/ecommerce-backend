@@ -60,46 +60,50 @@ app.use((err, req, res, next) => {
 });
 /* eslint-enable no-unused-vars */
 
-// Sync database and load default data if none exist
-await sequelize.sync();
+// Convert to serverless-friendly initialization:
+let _initialized = false;
+async function initOnce() {
+  if (_initialized) return;
+  await sequelize.sync();
 
-const productCount = await Product.count();
-if (productCount === 0) {
-  const timestamp = Date.now();
+  const productCount = await Product.count();
+  if (productCount === 0) {
+    const timestamp = Date.now();
 
-  const productsWithTimestamps = defaultProducts.map((product, index) => ({
-    ...product,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
+    const productsWithTimestamps = defaultProducts.map((product, index) => ({
+      ...product,
+      createdAt: new Date(timestamp + index),
+      updatedAt: new Date(timestamp + index)
+    }));
 
-  const deliveryOptionsWithTimestamps = defaultDeliveryOptions.map((option, index) => ({
-    ...option,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
+    const deliveryOptionsWithTimestamps = defaultDeliveryOptions.map((option, index) => ({
+      ...option,
+      createdAt: new Date(timestamp + index),
+      updatedAt: new Date(timestamp + index)
+    }));
 
-  const cartItemsWithTimestamps = defaultCart.map((item, index) => ({
-    ...item,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
+    const cartItemsWithTimestamps = defaultCart.map((item, index) => ({
+      ...item,
+      createdAt: new Date(timestamp + index),
+      updatedAt: new Date(timestamp + index)
+    }));
 
-  const ordersWithTimestamps = defaultOrders.map((order, index) => ({
-    ...order,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
+    const ordersWithTimestamps = defaultOrders.map((order, index) => ({
+      ...order,
+      createdAt: new Date(timestamp + index),
+      updatedAt: new Date(timestamp + index)
+    }));
 
-  await Product.bulkCreate(productsWithTimestamps);
-  await DeliveryOption.bulkCreate(deliveryOptionsWithTimestamps);
-  await CartItem.bulkCreate(cartItemsWithTimestamps);
-  await Order.bulkCreate(ordersWithTimestamps);
+    await Product.bulkCreate(productsWithTimestamps);
+    await DeliveryOption.bulkCreate(deliveryOptionsWithTimestamps);
+    await CartItem.bulkCreate(cartItemsWithTimestamps);
+    await Order.bulkCreate(ordersWithTimestamps);
 
-  console.log('Default data added to the database.');
+    console.log('Default data added to the database.');
+  }
+
+  _initialized = true;
 }
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Export app and initOnce for serverless handler
+export { app, initOnce };
